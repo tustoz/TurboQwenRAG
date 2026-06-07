@@ -3,7 +3,6 @@
 > **Lightweight, fast, secure, and free document chat system powered by Qwen AI and TurboVec search.**
 > Upload your documents, ask questions, and get answers from your own files - no paid API required.
 
----
 
 ## Tech Stack
 
@@ -15,9 +14,8 @@
 | **Framework** | `LangChain` | Document loading, text splitting |
 | **UI** | `Gradio` | Web interface, shareable link |
 
----
-
 ## Getting Started
+
 
 ### Local Setup
 ```bash
@@ -40,7 +38,6 @@ hf_hub_download('unsloth/Qwen3-8B-GGUF', 'Qwen3-8B-Q4_K_M.gguf', local_dir='./mo
 python app.py
 ```
 
----
 
 ## Supported File Formats
 
@@ -48,7 +45,6 @@ python app.py
 - **TXT** - plain text files
 - **Markdown** - .md files
 
----
 
 ## VRAM Usage
 
@@ -60,8 +56,7 @@ python app.py
 | turbovec index (in RAM, not VRAM) | — |
 | **Total** | **~7.3 GB** |
 
----
 
 ## License
 
-MIT - free for personal and commercial use.
+This project is licensed under the MIT License. See the [LICENSE](./LICENSE) file for details.
