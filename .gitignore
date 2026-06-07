@@ -20,3 +20,4 @@ drive/
 # Others
 test/test.*.py
 *.zip
+eval_colab.py

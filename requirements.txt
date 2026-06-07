@@ -1,5 +1,6 @@
 # RAG Knowledge Base Dependencies
 # Tested on Google Colab T4 GPU (June 2026)
+# v2: Qwen3-Reranker-0.6B, auto index, confidence threshold, multi-turn, RAGAS eval
 
 # Pydantic & aiofiles (pinned for gradio + turbovec compatibility)
 pydantic>=2.12.5,<=2.12.9

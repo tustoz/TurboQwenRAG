@@ -52,24 +52,31 @@ class Qwen3Generator:
         self,
         question   : str,
         context    : str,
+        history    : list  = None,
         max_tokens : int   = 512,
         temperature: float = 0.1,
     ) -> str:
-        user_message = f"""Context Documents: {context}
-        ---
+        messages = [{"role": "system", "content": self.SYSTEM_PROMPT}]
 
-        Question: {question} /no_think"""
+        if history:
+            for user_msg, assistant_msg in history:
+                messages.append({"role": "user",      "content": str(user_msg)})
+                messages.append({"role": "assistant", "content": str(assistant_msg)})
+
+        user_message = (
+            f"Context Documents: {context}\n"
+            f"---\n\n"
+            f"Question: {question} /no_think"
+        )
+        messages.append({"role": "user", "content": user_message})
 
         response = self.llm.create_chat_completion(
-            messages=[
-                {"role": "system", "content": self.SYSTEM_PROMPT},
-                {"role": "user",   "content": user_message},
-            ],
+            messages       = messages,
             max_tokens     = max_tokens,
             temperature    = temperature,
             top_p          = 0.9,
             repeat_penalty = 1.1,
         )
         raw    = response["choices"][0]["message"]["content"].strip()
-        answer = self._strip_thinking(raw)  # strip if there is a thinking tag
+        answer = self._strip_thinking(raw)
         return answer
