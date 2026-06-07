@@ -10,6 +10,7 @@
 |---|---|---|
 | **Embedding** | `Qwen/Qwen3-Embedding-0.6B` | Instruction-aware, 8K context, 1024-dim, Apache 2.0 |
 | **Vector Store** | `turbovec IdMapIndex` | TurboQuant 4-bit, Rust+SIMD, zero training, `.tvim` persistence |
+| **Reranker** | `Qwen/Qwen3-Reranker-0.6B` | Cross-encoder two-stage retrieval, instruction-aware |
 | **LLM** | `Qwen3-8B-Q4_K_M` | ~5GB VRAM, llama.cpp CUDA, chatml format |
 | **Framework** | `LangChain` | Document loading, text splitting |
 | **UI** | `Gradio` | Web interface, shareable link |
@@ -50,12 +51,28 @@ python app.py
 
 | Component | VRAM |
 |---|---|
-| Qwen3-Embedding-0.6B | ~1.3 GB |
-| Qwen3-8B Q4_K_M (model) | ~5.0 GB |
+| Qwen3-Embedding-0.6B | ~1.2 GB |
+| Qwen3-Reranker-0.6B | ~1.2 GB |
+| Qwen3-8B Q4_K_M (weights) | ~5.0 GB |
 | Qwen3-8B (KV cache, ctx=8192) | ~1.0 GB |
-| turbovec index (in RAM, not VRAM) | — |
-| **Total** | **~7.3 GB** |
+| PyTorch + CUDA overhead | ~0.3 GB |
+| turbovec index (RAM, not VRAM) | — |
+| **Total** | **~8.7 GB** |
 
+## Changelog
+
+### v1.0.0 - Initial Release
+- ✅ Qwen3-Embedding-0.6B + turbovec IdMapIndex + Qwen3-8B pipeline
+- ✅ Gradio UI with dark theme
+- ✅ PDF, TXT, Markdown ingestion
+- ✅ Persistent turbovec index
+
+### v1.1.0 - Five Improvements Update
+- ✅ Added Qwen3-Reranker-0.6B (two-stage retrieval)
+- ✅ Auto load/build index
+- ✅ Confidence threshold (anti-hallucination, default 0.30)
+- ✅ Multi-turn chat history (last 3 turns as context)
+- ✅ Gradio UI v2 with evaluation tab and live confidence display
 
 ## License
 
