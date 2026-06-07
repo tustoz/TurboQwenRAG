@@ -1,0 +1,43 @@
+# RAG Knowledge Base Dependencies
+# Tested on Google Colab T4 GPU (June 2026)
+
+# Pydantic & aiofiles (pinned for gradio + turbovec compatibility)
+pydantic>=2.12.5,<=2.12.9
+aiofiles>=24.1.0,<25.0
+
+# Gradio
+gradio==5.50.0
+gradio-client
+httpx
+starlette
+uvicorn
+python-multipart
+tomlkit
+
+# turbovec
+turbovec[langchain]>=0.5.0
+
+# LangChain
+langchain>=0.2.0
+langchain-community>=0.2.0
+langchain-core>=0.2.0
+langchain-text-splitters>=0.2.0
+
+# Embedding
+sentence-transformers>=3.0.0
+transformers>=4.40.0
+accelerate>=0.30.0
+
+# LLM inference
+llama-cpp-python>=0.2.80
+
+# Document parsers
+pymupdf>=1.24.0
+pypdf>=4.0.0
+
+# Model download
+huggingface_hub>=0.23.0
+
+# Utilities
+numpy>=1.24.0,<2.0
+torch>=2.0.0
