@@ -17,22 +17,6 @@
 
 ---
 
-## Architecture
-
-User Query
-↓
-[Qwen3-Embedding-0.6B]  instruction-aware query embedding (1024-dim)
-↓
-[turbovec IdMapIndex]    TurboQuant 4-bit ANN search (Rust + SIMD)
-↓
-[Context Assembly]       format top-k chunks + source attribution
-↓
-[Qwen3-8B Q4_K_M]       answer generation (llama.cpp + CUDA)
-↓
-Answer + Sources
-
----
-
 ## Getting Started
 
 ### Local Setup
