@@ -56,7 +56,6 @@ python app.py
 | Qwen3-8B Q4_K_M (weights) | ~5.0 GB |
 | Qwen3-8B (KV cache, ctx=8192) | ~1.0 GB |
 | PyTorch + CUDA overhead | ~0.3 GB |
-| turbovec index (RAM, not VRAM) | — |
 | **Total** | **~8.7 GB** |
 
 ## Changelog
