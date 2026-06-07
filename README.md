@@ -70,44 +70,11 @@ python app.py
 
 | Component | VRAM |
 |---|---|
-| Qwen3-Embedding-0.6B | ~1.2 GB |
+| Qwen3-Embedding-0.6B | ~1.3 GB |
 | Qwen3-8B Q4_K_M (model) | ~5.0 GB |
-| Qwen3-8B (KV cache, ctx=4096) | ~0.5 GB |
+| Qwen3-8B (KV cache, ctx=8192) | ~1.0 GB |
 | turbovec index (in RAM, not VRAM) | — |
-| **Total** | **~6.7 GB** |
-
----
-
-## AI Engineering Skills Demonstrated
-
-| Skill | Implementation |
-|---|---|
-| **RAG Pipeline Design** | End-to-end: ingestion → embedding → retrieval → generation |
-| **Instruction-Aware Embedding** | Separate prompts for query vs document in Qwen3-Embedding |
-| **Quantized Vector Search** | turbovec TurboQuant 4-bit, Rust+SIMD, zero training overhead |
-| **LLM Quantization** | Q4_K_M GGUF via llama.cpp, full GPU offload on T4 |
-| **Prompt Engineering** | System prompt, context injection, /no_think mode for Qwen3 |
-| **Persistent Storage** | turbovec `.tvim` binary format, incremental add/remove |
-| **Modular Architecture** | Separated embedder/ingest/vector_store/generator/pipeline |
-| **Production Thinking** | Zero external API dependency, cost-conscious hardware usage |
-
----
-
-## Project Structure
-
-rag-knowledge-base/
-├── RAG_KnowledgeBase.ipynb  ← Main notebook
-├── src/
-│   ├── embedder.py          ← Qwen3-Embedding-0.6B
-│   ├── ingest.py            ← Document loader + chunker
-│   ├── vector_store.py      ← turbovec IdMapIndex wrapper
-│   ├── generator.py         ← Qwen3-8B via llama.cpp
-│   └── pipeline.py          ← RAG chain assembly
-├── data/docs/               ← Your documents here
-├── index/                   ← Saved turbovec index
-├── models/                  ← GGUF model files
-├── app.py                   ← Standalone Gradio app
-└── requirements.txt
+| **Total** | **~7.3 GB** |
 
 ---
 
