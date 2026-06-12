@@ -1,8 +1,8 @@
-import re, torch
+import re
 from llama_cpp import Llama
 
 class Qwen3Generator:
-    
+
     SYSTEM_PROMPT = """
     You are TurboQwenRAG, a helpful AI assistant that answers questions based ONLY on the provided context documents.
 
@@ -20,7 +20,6 @@ class Qwen3Generator:
         n_ctx        : int = 8192,
         n_gpu_layers : int = -1,
     ):
-        print(f"Loading Qwen3-8B from {model_path}...")
         self.llm = Llama(
             model_path   = model_path,
             n_gpu_layers = n_gpu_layers,
@@ -29,23 +28,20 @@ class Qwen3Generator:
             verbose      = False,
             chat_format  = "chatml",
         )
-        print("Qwen3-8B loaded!")
 
-        try:
-            import subprocess
-            result = subprocess.run(
-                ["nvidia-smi", "--query-gpu=memory.used,memory.total",
-                 "--format=csv,noheader,nounits"],
-                capture_output=True, text=True
-            )
-            used, total = result.stdout.strip().split(", ")
-            print(f"   VRAM used: {int(used)/1024:.1f} GB / {int(total)/1024:.1f} GB")
-        except Exception:
-            pass
+    def _build_messages(self, question: str, context: str, history: list = None) -> list:
+        messages = [{"role": "system", "content": self.SYSTEM_PROMPT}]
+        if history:
+            for user_msg, assistant_msg in history:
+                messages.append({"role": "user",      "content": str(user_msg)})
+                messages.append({"role": "assistant", "content": str(assistant_msg)})
+        messages.append({"role": "user", "content": (
+            f"Context Documents: {context}\n---\n\nQuestion: {question} /no_think"
+        )})
+        return messages
 
     @staticmethod
     def _strip_thinking(text: str) -> str:
-        """Delete <think>...</think> tag from Qwen3 output."""
         return re.sub(r"<think>.*?</think>", "", text, flags=re.DOTALL).strip()
 
     def generate(
@@ -56,27 +52,61 @@ class Qwen3Generator:
         max_tokens : int   = 512,
         temperature: float = 0.1,
     ) -> str:
-        messages = [{"role": "system", "content": self.SYSTEM_PROMPT}]
-
-        if history:
-            for user_msg, assistant_msg in history:
-                messages.append({"role": "user",      "content": str(user_msg)})
-                messages.append({"role": "assistant", "content": str(assistant_msg)})
-
-        user_message = (
-            f"Context Documents: {context}\n"
-            f"---\n\n"
-            f"Question: {question} /no_think"
-        )
-        messages.append({"role": "user", "content": user_message})
-
         response = self.llm.create_chat_completion(
-            messages       = messages,
+            messages       = self._build_messages(question, context, history),
             max_tokens     = max_tokens,
             temperature    = temperature,
             top_p          = 0.9,
             repeat_penalty = 1.1,
         )
-        raw    = response["choices"][0]["message"]["content"].strip()
-        answer = self._strip_thinking(raw)
-        return answer
+        raw = response["choices"][0]["message"]["content"].strip()
+        return self._strip_thinking(raw)
+
+    def generate_stream(
+        self,
+        question   : str,
+        context    : str,
+        history    : list  = None,
+        max_tokens : int   = 512,
+        temperature: float = 0.1,
+    ):
+        stream = self.llm.create_chat_completion(
+            messages       = self._build_messages(question, context, history),
+            max_tokens     = max_tokens,
+            temperature    = temperature,
+            top_p          = 0.9,
+            repeat_penalty = 1.1,
+            stream         = True,
+        )
+        in_think = False
+        started  = False
+        buf      = ""
+        for chunk in stream:
+            delta = chunk["choices"][0]["delta"]
+            if "content" not in delta or not delta["content"]:
+                continue
+            buf += delta["content"]
+            while buf:
+                if in_think:
+                    end = buf.find("</think>")
+                    if end != -1:
+                        buf      = buf[end + 8:]
+                        in_think = False
+                    else:
+                        buf = ""
+                else:
+                    start = buf.find("<think>")
+                    if start != -1:
+                        if start > 0:
+                            text = buf[:start] if started else buf[:start].lstrip()
+                            if text:
+                                started = True
+                                yield text
+                        buf      = buf[start + 7:]
+                        in_think = True
+                    else:
+                        text = buf if started else buf.lstrip()
+                        buf  = ""
+                        if text:
+                            started = True
+                            yield text

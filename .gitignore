@@ -21,3 +21,7 @@ drive/
 test/test.*.py
 *.zip
 eval_colab.py
+Paper
+Paper/*.pdf
+archive/*
+archive

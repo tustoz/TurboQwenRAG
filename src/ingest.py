@@ -4,7 +4,7 @@ from langchain_core.documents import Document
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 
 def load_pdf(file_path: str) -> list:
-    import fitz  # PyMuPDF
+    import fitz
     docs = []
     pdf = fitz.open(file_path)
     for page_num in range(len(pdf)):

@@ -1,7 +1,6 @@
 import re
 import numpy as np
 
-
 class RAGEvaluator:
     def __init__(self, generator, embedder):
         self.generator = generator

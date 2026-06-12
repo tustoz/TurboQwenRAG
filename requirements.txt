@@ -1,19 +1,12 @@
-# RAG Knowledge Base Dependencies
-# Tested on Google Colab T4 GPU (June 2026)
-# v2: Qwen3-Reranker-0.6B, auto index, confidence threshold, multi-turn, RAGAS eval
-
-# Pydantic & aiofiles (pinned for gradio + turbovec compatibility)
-pydantic>=2.12.5,<=2.12.9
+pydantic>=2.0.0
 aiofiles>=24.1.0,<25.0
 
-# Gradio
-gradio==5.50.0
-gradio-client
-httpx
-starlette
-uvicorn
-python-multipart
-tomlkit
+# Web server
+fastapi>=0.100.0
+uvicorn>=0.24.0
+starlette>=0.27.0
+httpx>=0.24.0
+python-multipart>=0.0.6
 
 # turbovec
 turbovec[langchain]>=0.5.0

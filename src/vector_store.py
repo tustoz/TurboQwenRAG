@@ -1,8 +1,6 @@
 import os, json, pickle
 import numpy as np
 from turbovec import IdMapIndex
-from langchain_core.documents import Document
-
 
 class TurboVecStore:
     EMBEDDING_DIM = 1024
@@ -50,12 +48,6 @@ class TurboVecStore:
         self.metadata.pop(chunk_id, None)
 
     def search(self, query_embedding: np.ndarray, k: int = 5) -> list:
-        """
-        turbovec search() need query shape (1, dim) not (dim,)
-        returns: scores shape (1, k), ids shape (1, k),
-        so wee need to get [0] for first query result.
-        """
-        # make sure it's float32
         q = query_embedding.astype(np.float32)
 
         # Reshape: (dim,) to (1, dim)
@@ -117,7 +109,7 @@ class TurboVecStore:
 
         assert os.path.exists(index_path), f"Index not found: {index_path}"
 
-        store           = cls.__new__(cls)
+        store               = cls.__new__(cls)
         store.EMBEDDING_DIM = 1024
         store.BIT_WIDTH     = 4
         store.index         = IdMapIndex.load(index_path)

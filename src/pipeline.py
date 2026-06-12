@@ -1,13 +1,8 @@
-import numpy as np
-from src.embedder import Qwen3Embedder
-from src.vector_store import TurboVecStore
-from src.generator import Qwen3Generator
-from src.ingest import load_documents, chunk_documents
 from turbovec import IdMapIndex
-
+from src.vector_store import TurboVecStore
+from src.ingest import load_documents, chunk_documents
 
 class RAGPipeline:
-
     def __init__(
         self,
         embedder,
